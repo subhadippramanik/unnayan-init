@@ -6,16 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Embeddable
 public class Artifact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	private int id;
+	@ApiModelProperty(required = true)
 	private String name;
+	@ApiModelProperty(required = true)
 	private String version;
+	@ApiModelProperty(hidden = true)
 	private String fileName;
+	@ApiModelProperty(hidden = true)
 	private String fileSha;
+	@ApiModelProperty(hidden = true)
 	private String path;
 
 	public int getId() {

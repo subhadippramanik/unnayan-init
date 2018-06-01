@@ -1,9 +1,5 @@
 package com.unnayan.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +19,8 @@ import com.unnayan.model.UploadModel;
 import com.unnayan.service.ArtifactService;
 import com.unnayan.service.UploadService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 public class ArtifactController {
 
@@ -36,11 +34,13 @@ public class ArtifactController {
 	}
 
 	@PostMapping("/artifact")
+	@ApiOperation(value = "Create artifact")
 	public Artifact createArtifact(@RequestBody Artifact artifact) {
 		return artifactService.createArtifact(artifact.getName(), artifact.getVersion());
 	}
 
 	@PostMapping("/artifact/{id}/upload")
+	@ApiOperation(value = "Upload file to artifact")
 	public ResponseEntity<Artifact> uploadFileToArtifact(@PathVariable("id") final int id, @RequestParam("file") final MultipartFile file,
 			@RequestParam(value = "filename", required = false) final String optionalFileName) {
 		if(file.isEmpty()) {
@@ -60,11 +60,13 @@ public class ArtifactController {
 	}
 
 	@GetMapping("/artifacts")
+	@ApiOperation(value = "Get all artifacts")
 	public List<Artifact> artifacts() {
 		return artifactService.findAllArtifacts();
 	}
 
 	@GetMapping("/artifact/{id}")
+	@ApiOperation(value = "Get artifact by Id")
 	public Artifact artifact(@PathVariable int id) {
 		return artifactService.findArtifactById(id);
 	}

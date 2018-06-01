@@ -1,7 +1,9 @@
-server.port: 8181
-# multipart 
+server:
+  port: 8181
+
 multipart.enabled: true
-spring.http.multipart.max-file-size: 500000KB
+spring:
+  http.multipart.max-file-size: 500000KB
 
 logging:
   level:
