@@ -5,11 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Embeddable
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "version"})})
 public class Artifact {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

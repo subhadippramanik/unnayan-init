@@ -1,6 +1,7 @@
 package com.unnayan.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +36,34 @@ public class ArtifactController {
 
 	@PostMapping("/artifact")
 	@ApiOperation(value = "Create artifact")
-	public Artifact createArtifact(@RequestBody Artifact artifact) {
-		return artifactService.createArtifact(artifact.getName(), artifact.getVersion());
+	public ResponseEntity<Artifact> createArtifact(@RequestBody Artifact artifact) {
+		Artifact artifactCreated = artifactService.createArtifact(artifact.getName(), artifact.getVersion());
+		if (Objects.nonNull(artifactCreated)) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(artifactCreated);
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	@PostMapping("/artifact/{id}/upload")
 	@ApiOperation(value = "Upload file to artifact")
-	public ResponseEntity<Artifact> uploadFileToArtifact(@PathVariable("id") final int id, @RequestParam("file") final MultipartFile file,
+	public ResponseEntity<Artifact> uploadFileToArtifact(@PathVariable("id") final int id,
+			@RequestParam("file") final MultipartFile file,
 			@RequestParam(value = "filename", required = false) final String optionalFileName) {
-		if(file.isEmpty()) {
+		if (file.isEmpty()) {
 			return ResponseEntity.badRequest().build();
-		} else {
+		}else if(Objects.isNull(artifactService.findArtifactById(id))) { 
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}else {
 			String fileName = StringUtils.isEmpty(optionalFileName) ? file.getOriginalFilename() : optionalFileName;
 			UploadModel uploadModel = new UploadModel(file, fileName);
 			try {
 				uploadService.uploadFile(id, uploadModel);
+				return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 			} catch (Exception e) {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
-			
 		}
-		return null;
-
 	}
 
 	@GetMapping("/artifacts")
@@ -67,7 +74,12 @@ public class ArtifactController {
 
 	@GetMapping("/artifact/{id}")
 	@ApiOperation(value = "Get artifact by Id")
-	public Artifact artifact(@PathVariable int id) {
-		return artifactService.findArtifactById(id);
+	public ResponseEntity<Artifact> artifact(@PathVariable int id) {
+		Artifact artifact = artifactService.findArtifactById(id);
+		if (Objects.nonNull(artifact)) {
+			return ResponseEntity.status(HttpStatus.OK).body(artifact);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 }
