@@ -35,6 +35,9 @@ public class Artifact {
 	@ApiModelProperty(hidden = true)
 	private String path;
 	
+	@ApiModelProperty(hidden = true)
+	private String downloadURI;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -82,5 +85,12 @@ public class Artifact {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
+	public String getDownloadURI() {
+		return downloadURI;
+	}
+
+	public void setDownloadURI(String downloadURI) {
+		this.downloadURI = downloadURI;
+	}
 }
