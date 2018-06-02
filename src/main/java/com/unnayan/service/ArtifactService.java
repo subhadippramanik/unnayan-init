@@ -31,7 +31,9 @@ public class ArtifactService {
 		Artifact artifact = new Artifact();
 		artifact.setName(name);
 		artifact.setVersion(version);
-		return artifactRepository.save(artifact);
+		Artifact savedArtifact = artifactRepository.save(artifact);
+		artifactRepository.flush();
+		return savedArtifact;
 	}
 
 	public Artifact update(Artifact artifactToUpdate) {
@@ -39,7 +41,9 @@ public class ArtifactService {
 		if(Objects.nonNull(artifactFound)) {
 			artifactFound.setFileName(artifactToUpdate.getFileName());
 			artifactFound.setPath(artifactToUpdate.getPath());
-			return artifactRepository.save(artifactFound);
+			Artifact updatedArtifact = artifactRepository.save(artifactFound);
+			artifactRepository.flush();
+			return updatedArtifact;
 		} else {
 			return findArtifactById(artifactToUpdate.getId());
 		}

@@ -4,7 +4,22 @@ server:
 multipart.enabled: true
 spring:
   http.multipart.max-file-size: 500000KB
-
+---
+spring:
+  profiles: mysql
+  jpa:
+    database: MYSQL
+    generate-ddl: true
+    hibernate.ddl-auto: update
+    hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate.show_sql: true
+    hibernate.hbm2ddl.auto: create
+  datasource:
+    url: jdbc:mysql://localhost:3306/unnayan?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+---
 logging:
   level:
     root: DEBUG

@@ -68,8 +68,8 @@ public class ArtifactController {
 
 	@GetMapping("/artifacts")
 	@ApiOperation(value = "Get all artifacts")
-	public List<Artifact> artifacts() {
-		return artifactService.findAllArtifacts();
+	public ResponseEntity<List<Artifact>> artifacts() {
+		return ResponseEntity.status(HttpStatus.OK).body(artifactService.findAllArtifacts());
 	}
 
 	@GetMapping("/artifact/{id}")

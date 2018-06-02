@@ -1,40 +1,44 @@
 package com.unnayan.model;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.google.common.collect.ImmutableSet;
 
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"name" , "version"})})
-public class Artifact {
+@Embeddable
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "version" }) })
+public class Package {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
 	private Integer id;
-	
+
 	@ApiModelProperty(required = true)
 	private String name;
-	
+
 	@ApiModelProperty(required = true)
 	private String version;
-	
+
+	@OneToMany
 	@ApiModelProperty(hidden = true)
-	private String fileName;
-	
-	@ApiModelProperty(hidden = true)
-	private String fileSha;
-	
-	@ApiModelProperty(hidden = true)
-	private String path;
-	
+	private Set<Artifact> artifacts;
+
 	public Integer getId() {
 		return id;
 	}
@@ -59,28 +63,15 @@ public class Artifact {
 		this.version = version;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileSha() {
-		return fileSha;
-	}
-
-	public void setFileSha(String fileSha) {
-		this.fileSha = fileSha;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
+	public Set<Artifact> getArtifacts() {
+		return Objects.isNull(artifacts) ? Collections.emptySet() : ImmutableSet.copyOf(artifacts);
 	}
 	
+	public void setArtifacts(Set<Artifact> artipacks) {
+		if(Objects.isNull(artifacts)) {
+			artifacts = new HashSet<>();
+		}
+		artifacts.addAll(artipacks);
+	}
+
 }
