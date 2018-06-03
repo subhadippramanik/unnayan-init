@@ -31,7 +31,7 @@ public class PackageService {
 		return packageRepository.findAll();
 	}
 
-	public Package getPackageById(Integer id) {
+	public Package findPackageById(Integer id) {
 		return packageRepository.findOne(id);
 	}
 
@@ -43,14 +43,14 @@ public class PackageService {
 	}
 
 	public Package createArtipack(Integer packageId, Set<Integer> artifactIDs) {
-		final Package packageById = getPackageById(packageId);
+		final Package packageById = findPackageById(packageId);
 		Set<Artifact> artifacts = artifactIDs.stream()//
 				.map(artifactId -> artifactService.findArtifactById(artifactId))//
 				.filter(artifact -> Objects.nonNull(artifact))//
 				.collect(Collectors.toSet());
 		packageById.setArtifacts(artifacts);
 		packageRepository.saveAndFlush(packageById);
-		return getPackageById(packageId);
+		return findPackageById(packageId);
 	}
 
 }

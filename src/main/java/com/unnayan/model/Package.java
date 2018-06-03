@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -66,9 +65,9 @@ public class Package {
 	public Set<Artifact> getArtifacts() {
 		return Objects.isNull(artifacts) ? Collections.emptySet() : ImmutableSet.copyOf(artifacts);
 	}
-	
+
 	public void setArtifacts(Set<Artifact> artipacks) {
-		if(Objects.isNull(artifacts)) {
+		if (Objects.isNull(artifacts)) {
 			artifacts = new HashSet<>();
 		}
 		artifacts.addAll(artipacks);

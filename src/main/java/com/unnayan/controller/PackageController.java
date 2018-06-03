@@ -37,7 +37,7 @@ public class PackageController {
 	@GetMapping("/package/{id}")
 	@ApiOperation(value = "Get package") 
 	public ResponseEntity<Package> getPackage(@PathVariable int id) {
-		Package packageFound = packageService.getPackageById(id);
+		Package packageFound = packageService.findPackageById(id);
 		if(Objects.nonNull(packageFound)) {
 			return ResponseEntity.status(HttpStatus.OK).body(packageFound);
 		} else {
