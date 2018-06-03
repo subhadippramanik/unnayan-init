@@ -69,11 +69,4 @@ public class DeviceService {
 		return findDeviceById(device.getId());
 	}
 
-	public Device assignActions(Device device, Set<Integer> actionIDs) {
-		actionIDs.stream()//
-				.map(actionId -> actionService.findActionById(actionId))//
-				.forEach(action -> device.setActions(Sets.newHashSet(action)));
-		return deviceRepository.saveAndFlush(device);
-	}
-
 }

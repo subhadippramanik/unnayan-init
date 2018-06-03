@@ -8,6 +8,8 @@ import javax.persistence.OneToOne;
 
 import com.unnayan.model.constants.ActionExecutionStatus;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Action {
 
@@ -18,6 +20,7 @@ public class Action {
 	@OneToOne
 	private Package assignedPackage;
 
+	@ApiModelProperty(allowableValues = "ASSIGNED,REQUEST_CANCEL,FORCE_CANCEL,CANCELLED,FINISHED_WITH_SUCCESS,FINISHED_WITH_ERROR")
 	private ActionExecutionStatus executionStatus = ActionExecutionStatus.ASSIGNED;
 
 	public Integer getId() {

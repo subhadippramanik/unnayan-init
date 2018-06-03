@@ -72,17 +72,6 @@ public class DeviceController {
 		}
 	}
 
-	@PutMapping("/device/{identity}/action")
-	@ApiOperation(value = "Assign actions to device")
-	public ResponseEntity<Device> assignActions(@PathVariable String identity, @RequestBody Set<Integer> actionIDs) {
-		final Device device = deviceService.findDeviceByIdentity(identity);
-		if (Objects.isNull(device)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		final Device updatedDevice = deviceService.assignActions(device, actionIDs);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedDevice);
-	}
-
 	@PutMapping("/device/{identity}/package")
 	@ApiOperation(value = "Assign actions to device")
 	public ResponseEntity<Device> assignPackages(@PathVariable String identity, @RequestBody Set<Integer> packageIDs) {

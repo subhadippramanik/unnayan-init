@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unnayan.model.Action;
+import com.unnayan.model.constants.ActionExecutionStatus;
 import com.unnayan.repository.ActionRepository;
 
 @Service
@@ -28,6 +29,11 @@ public class ActionService {
 
 	public Action registerAction(Action action) {
 		return actionRepository.save(action);
+	}
+
+	public Action updateExecutionStatus(Action action, ActionExecutionStatus actionExecutionStatus) {
+		action.setExecutionStatus(actionExecutionStatus);
+		return actionRepository.saveAndFlush(action);
 	}
 
 }
