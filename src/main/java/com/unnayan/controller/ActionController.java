@@ -1,7 +1,7 @@
 package com.unnayan.controller;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ public class ActionController {
 
 	@GetMapping("/actions")
 	@ApiOperation(value = "Get all actions")
-	public List<Action> getAllActions() {
+	public Set<Action> getAllActions() {
 		return actionService.findAllActions();
 	}
 

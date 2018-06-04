@@ -1,6 +1,5 @@
 package com.unnayan.controller;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class DeviceController {
 
 	@GetMapping("/devices")
 	@ApiOperation(value = "Get all devices")
-	public ResponseEntity<List<Device>> getAllDevices() {
+	public ResponseEntity<Set<Device>> getAllDevices() {
 		return ResponseEntity.status(HttpStatus.OK).body(deviceService.findAllDevices());
 	}
 

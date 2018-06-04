@@ -3,8 +3,8 @@ package com.unnayan.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
 public class ArtifactController {
 
 	private final ArtifactService artifactService;
-	//TODO Move this call from controller to service
+	// TODO Move this call from controller to service
 	private final FileStorageService fileStorageService;
 
 	@Autowired
@@ -46,7 +46,7 @@ public class ArtifactController {
 	@PostMapping("/artifact")
 	@ApiOperation(value = "Create artifact")
 	public ResponseEntity<Artifact> createArtifact(@RequestBody Artifact artifact) {
-		Artifact artifactCreated = artifactService.createArtifact(artifact.getName(), artifact.getVersion());
+		final Artifact artifactCreated = artifactService.createArtifact(artifact.getName(), artifact.getVersion());
 		if (Objects.nonNull(artifactCreated)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(artifactCreated);
 		} else {
@@ -64,12 +64,13 @@ public class ArtifactController {
 		} else if (Objects.isNull(artifactService.findArtifactById(id))) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} else {
-			String fileName = StringUtils.isEmpty(optionalFileName) ? file.getOriginalFilename() : optionalFileName;
-			UploadModel uploadModel = new UploadModel(file, fileName);
+			final String fileName = StringUtils.isEmpty(optionalFileName) ? file.getOriginalFilename()
+					: optionalFileName;
+			final UploadModel uploadModel = new UploadModel(file, fileName);
 			try {
 				fileStorageService.storeFile(id, uploadModel);
 				return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
 		}
@@ -79,30 +80,30 @@ public class ArtifactController {
 	@ApiOperation(value = "Download artifact")
 	public ResponseEntity<Resource> downloadArtifact(@PathVariable("id") Integer artifactId,
 			HttpServletRequest request) {
-		String fileName = artifactService.findArtifactById(artifactId).getFileName();
+		final String fileName = artifactService.findArtifactById(artifactId).getFileName();
 		try {
-			Resource resource = fileStorageService.loadFileAsResource(fileName);
-			String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			final Resource resource = fileStorageService.loadFileAsResource(fileName);
+			final String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
 			return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
 					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 					.body(resource);
 		} catch (MalformedURLException | FileNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@GetMapping("/artifacts")
 	@ApiOperation(value = "Get all artifacts")
-	public ResponseEntity<List<Artifact>> artifacts() {
+	public ResponseEntity<Set<Artifact>> artifacts() {
 		return ResponseEntity.status(HttpStatus.OK).body(artifactService.findAllArtifacts());
 	}
 
 	@GetMapping("/artifact/{id}")
 	@ApiOperation(value = "Get artifact by Id")
 	public ResponseEntity<Artifact> artifact(@PathVariable int id) {
-		Artifact artifact = artifactService.findArtifactById(id);
+		final Artifact artifact = artifactService.findArtifactById(id);
 		if (Objects.nonNull(artifact)) {
 			return ResponseEntity.status(HttpStatus.OK).body(artifact);
 		} else {

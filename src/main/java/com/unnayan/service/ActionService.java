@@ -1,10 +1,11 @@
 package com.unnayan.service;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.ImmutableSet;
 import com.unnayan.model.Action;
 import com.unnayan.model.constants.ActionExecutionStatus;
 import com.unnayan.repository.ActionRepository;
@@ -19,8 +20,8 @@ public class ActionService {
 		this.actionRepository = actionRepository;
 	}
 
-	public List<Action> findAllActions() {
-		return actionRepository.findAll();
+	public Set<Action> findAllActions() {
+		return ImmutableSet.copyOf(actionRepository.findAll());
 	}
 
 	public Action findActionById(Integer id) {

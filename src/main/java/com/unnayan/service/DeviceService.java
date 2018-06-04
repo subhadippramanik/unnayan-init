@@ -1,6 +1,5 @@
 package com.unnayan.service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.unnayan.model.Action;
 import com.unnayan.model.Device;
@@ -28,8 +28,8 @@ public class DeviceService {
 		this.packageService = packageService;
 	}
 
-	public List<Device> findAllDevices() {
-		return deviceRepository.findAll();
+	public Set<Device> findAllDevices() {
+		return ImmutableSet.copyOf(deviceRepository.findAll());
 	}
 
 	public Device findDeviceById(Integer id) {
@@ -39,13 +39,6 @@ public class DeviceService {
 	public Device findDeviceByIdentity(String identity) {
 		final Optional<Device> optionalDevice = getDeviceByIdentityIfPresent(identity);
 		return optionalDevice.isPresent() ? optionalDevice.get() : null;
-	}
-
-	private Optional<Device> getDeviceByIdentityIfPresent(String identity) {
-		final Optional<Device> optionalDevice = deviceRepository.findAll().stream()//
-				.filter(device -> device.getIdentity().equals(identity))//
-				.findAny();
-		return optionalDevice;
 	}
 
 	public Device registerDevice(Device device) {
@@ -59,6 +52,7 @@ public class DeviceService {
 		final Set<Action> actionsCreated = Sets.newHashSet();
 		packageIDs.stream()//
 				.map(packageId -> packageService.findPackageById(packageId))//
+				.filter(packageFound -> Objects.nonNull(packageFound))//
 				.forEach(packageToAssign -> {
 					final Action action = new Action();
 					action.setAssignedPackage(packageToAssign);
@@ -67,6 +61,13 @@ public class DeviceService {
 		device.setActions(actionsCreated);
 		deviceRepository.saveAndFlush(device);
 		return findDeviceById(device.getId());
+	}
+
+	private Optional<Device> getDeviceByIdentityIfPresent(String identity) {
+		final Optional<Device> optionalDevice = deviceRepository.findAll().stream()//
+				.filter(device -> device.getIdentity().equals(identity))//
+				.findAny();
+		return optionalDevice;
 	}
 
 }
